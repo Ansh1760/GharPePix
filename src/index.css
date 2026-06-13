@@ -1,0 +1,58 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-bg: #FAF3E1;
+  --color-brand-bgSecondary: #F5E7C6;
+  --color-brand-accent: #FA8112;
+  --color-brand-text: #222222;
+
+  --font-sans: 'Poppins', 'Inter', 'sans-serif';
+
+  --radius-2xl: 20px;
+  --radius-3xl: 24px;
+
+  --shadow-soft: 0 4px 20px -2px rgba(34, 34, 34, 0.08);
+  --shadow-soft-lg: 0 10px 30px -5px rgba(34, 34, 34, 0.12);
+}
+
+@layer base {
+  body {
+    background-color: var(--color-brand-bg);
+    color: var(--color-brand-text);
+    font-family: var(--font-sans);
+    -webkit-tap-highlight-color: transparent;
+    min-height: 100vh;
+  }
+}
+
+@utility glass-panel {
+  background: rgba(245, 231, 198, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(250, 129, 18, 0.1);
+}
+
+@utility page-transition-enter {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+@utility page-transition-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 300ms, transform 300ms;
+}
+
+/* Custom smooth scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-brand-bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-brand-bgSecondary);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-brand-accent);
+}
