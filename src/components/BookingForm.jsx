@@ -20,7 +20,6 @@ export default function BookingForm({ isOpen, onClose, initialServiceId }) {
   // Populate from local storage and initial service on open
   useEffect(() => {
     if (isOpen) {
-      // 1. Check local storage
       const stored = localStorage.getItem('gpf_user_profile');
       let profile = {};
       if (stored) {
@@ -31,7 +30,6 @@ export default function BookingForm({ isOpen, onClose, initialServiceId }) {
         }
       }
 
-      // 2. Resolve initial service selection
       let defaultServiceName = SERVICES[0].name;
       if (initialServiceId) {
         const found = SERVICES.find((s) => s.id === initialServiceId);
@@ -46,7 +44,7 @@ export default function BookingForm({ isOpen, onClose, initialServiceId }) {
         description: '',
         address: profile.address || '',
         landmark: profile.landmark || '',
-        date: new Date().toISOString().split('T')[0], // Default to today
+        date: new Date().toISOString().split('T')[0],
         time: 'Morning (9 AM - 12 PM)',
       });
       setErrors({});
@@ -70,10 +68,8 @@ export default function BookingForm({ isOpen, onClose, initialServiceId }) {
     e.preventDefault();
     if (!validate()) return;
 
-    // Trigger WhatsApp redirect using the helper
     sendBookingToWhatsApp(formData);
 
-    // Save profile to local storage to make future entries easy
     const stored = localStorage.getItem('gpf_user_profile');
     let existingProfile = {};
     if (stored) {
@@ -98,8 +94,8 @@ export default function BookingForm({ isOpen, onClose, initialServiceId }) {
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 select-none">
-        {/* Backdrop overlay */}
+      <div className="fixed inset-0 z-50 flex items-end justify-center select-none">
+        {/* Backdrop */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -108,34 +104,44 @@ export default function BookingForm({ isOpen, onClose, initialServiceId }) {
           className="absolute inset-0 bg-brand-text/60 backdrop-blur-sm"
         />
 
-        {/* Form Container */}
+        {/* Form Container - slides up from bottom like a mobile sheet */}
         <motion.div
-          initial={{ opacity: 0, y: 100 }}
+          initial={{ opacity: 0, y: '100%' }}
           animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 100 }}
-          transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-          className="relative w-full max-w-md bg-brand-bgSecondary rounded-t-3xl sm:rounded-3xl overflow-hidden shadow-soft-lg z-10 border border-brand-accent/10 flex flex-col max-h-[92vh] sm:max-h-[85vh]"
+          exit={{ opacity: 0, y: '100%' }}
+          transition={{ type: 'spring', damping: 28, stiffness: 300 }}
+          className="relative w-full bg-brand-bgSecondary rounded-t-3xl overflow-hidden shadow-soft-lg z-10 border-t border-x border-brand-accent/10 flex flex-col"
+          style={{ 
+            maxHeight: 'calc(95vh - env(safe-area-inset-top, 0px))',
+            maxHeight: 'calc(95dvh - env(safe-area-inset-top, 0px))',
+            paddingBottom: 'env(safe-area-inset-bottom, 0px)'
+          }}
         >
+          {/* Drag handle indicator */}
+          <div className="flex justify-center pt-2 pb-1">
+            <div className="w-10 h-1 bg-brand-text/15 rounded-full" />
+          </div>
+
           {/* Header */}
-          <div className="flex items-center justify-between px-5 py-4 border-b border-brand-accent/10 bg-brand-bg">
-            <div className="text-left">
-              <h2 className="text-base font-extrabold text-brand-text flex items-center gap-1.5">
-                <Wrench size={18} className="text-brand-accent animate-spin-slow" />
-                <span>Book Service Now</span>
+          <div className="flex items-center justify-between px-4 py-3 border-b border-brand-accent/10 bg-brand-bg shrink-0">
+            <div className="text-left min-w-0">
+              <h2 className="text-sm sm:text-base font-extrabold text-brand-text flex items-center gap-1.5">
+                <Wrench size={16} className="text-brand-accent shrink-0" />
+                <span className="truncate">Book Service Now</span>
               </h2>
-              <p className="text-[10px] text-brand-text/50 font-semibold">Enter details to send booking on WhatsApp</p>
+              <p className="text-[9px] sm:text-[10px] text-brand-text/50 font-semibold">Enter details to send booking on WhatsApp</p>
             </div>
             <button
               onClick={onClose}
-              className="p-1.5 rounded-full hover:bg-brand-accent/15 text-brand-text/60 hover:text-brand-accent transition-colors"
+              className="p-2 rounded-full hover:bg-brand-accent/15 text-brand-text/60 hover:text-brand-accent transition-colors shrink-0 min-w-[36px] min-h-[36px] flex items-center justify-center"
             >
               <X size={18} />
             </button>
           </div>
 
-          {/* Form Content */}
-          <div className="flex-1 overflow-y-auto p-5 text-left">
-            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          {/* Form Content - scrollable */}
+          <div className="flex-1 overflow-y-auto overscroll-contain p-4 text-left">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-3.5">
               {/* Full Name */}
               <div className="flex flex-col gap-1">
                 <label className="text-[10px] font-bold text-brand-text/70 uppercase tracking-wider">
@@ -150,7 +156,7 @@ export default function BookingForm({ isOpen, onClose, initialServiceId }) {
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     placeholder="e.g. Aman Gupta"
-                    className={`w-full bg-brand-bg border ${errors.name ? 'border-red-400' : 'border-brand-accent/10'} focus:border-brand-accent rounded-xl py-2.5 pl-9 pr-3.5 text-xs font-semibold focus:outline-none transition-all placeholder:text-brand-text/30 text-brand-text`}
+                    className={`w-full bg-brand-bg border ${errors.name ? 'border-red-400' : 'border-brand-accent/10'} focus:border-brand-accent rounded-xl py-3 pl-9 pr-3 text-sm font-semibold focus:outline-none transition-all placeholder:text-brand-text/30 text-brand-text`}
                     required
                   />
                 </div>
@@ -159,7 +165,7 @@ export default function BookingForm({ isOpen, onClose, initialServiceId }) {
                 )}
               </div>
 
-              {/* What needs to be fixed */}
+              {/* Service Selection */}
               <div className="flex flex-col gap-1">
                 <label className="text-[10px] font-bold text-brand-text/70 uppercase tracking-wider">
                   What needs to be fixed?
@@ -167,7 +173,7 @@ export default function BookingForm({ isOpen, onClose, initialServiceId }) {
                 <select
                   value={formData.service}
                   onChange={(e) => setFormData({ ...formData, service: e.target.value })}
-                  className="w-full bg-brand-bg border border-brand-accent/10 focus:border-brand-accent rounded-xl py-2.5 px-3 text-xs font-semibold focus:outline-none transition-all text-brand-text"
+                  className="w-full bg-brand-bg border border-brand-accent/10 focus:border-brand-accent rounded-xl py-3 px-3 text-sm font-semibold focus:outline-none transition-all text-brand-text appearance-none"
                 >
                   {SERVICES.map((s) => (
                     <option key={s.id} value={s.name}>{s.name} ({s.category})</option>
@@ -181,15 +187,15 @@ export default function BookingForm({ isOpen, onClose, initialServiceId }) {
                   What is the issue?
                 </label>
                 <div className="relative">
-                  <span className="absolute left-3 top-3.5 text-brand-text/40">
+                  <span className="absolute left-3 top-3 text-brand-text/40">
                     <FileText size={14} />
                   </span>
                   <textarea
                     rows={3}
                     value={formData.description}
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    placeholder="Describe problem (e.g. Fan is making loud noise and regulator has stopped working)"
-                    className={`w-full bg-brand-bg border ${errors.description ? 'border-red-400' : 'border-brand-accent/10'} focus:border-brand-accent rounded-xl py-2.5 pl-9 pr-3.5 text-xs font-semibold focus:outline-none transition-all placeholder:text-brand-text/30 resize-none text-brand-text`}
+                    placeholder="Describe problem (e.g. Fan is making loud noise)"
+                    className={`w-full bg-brand-bg border ${errors.description ? 'border-red-400' : 'border-brand-accent/10'} focus:border-brand-accent rounded-xl py-3 pl-9 pr-3 text-sm font-semibold focus:outline-none transition-all placeholder:text-brand-text/30 resize-none text-brand-text`}
                     required
                   />
                 </div>
@@ -198,21 +204,21 @@ export default function BookingForm({ isOpen, onClose, initialServiceId }) {
                 )}
               </div>
 
-              {/* Detailed Address */}
+              {/* Address */}
               <div className="flex flex-col gap-1">
                 <label className="text-[10px] font-bold text-brand-text/70 uppercase tracking-wider">
                   Detailed Address
                 </label>
                 <div className="relative">
-                  <span className="absolute left-3 top-3.5 text-brand-text/40">
+                  <span className="absolute left-3 top-3 text-brand-text/40">
                     <MapPin size={14} />
                   </span>
                   <textarea
                     rows={2}
                     value={formData.address}
                     onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                    placeholder="House/Flat No, Street, Colony, Landmark, City"
-                    className={`w-full bg-brand-bg border ${errors.address ? 'border-red-400' : 'border-brand-accent/10'} focus:border-brand-accent rounded-xl py-2.5 pl-9 pr-3.5 text-xs font-semibold focus:outline-none transition-all placeholder:text-brand-text/30 resize-none text-brand-text`}
+                    placeholder="House/Flat No, Street, Colony, City"
+                    className={`w-full bg-brand-bg border ${errors.address ? 'border-red-400' : 'border-brand-accent/10'} focus:border-brand-accent rounded-xl py-3 pl-9 pr-3 text-sm font-semibold focus:outline-none transition-all placeholder:text-brand-text/30 resize-none text-brand-text`}
                     required
                   />
                 </div>
@@ -234,40 +240,38 @@ export default function BookingForm({ isOpen, onClose, initialServiceId }) {
                     type="text"
                     value={formData.landmark}
                     onChange={(e) => setFormData({ ...formData, landmark: e.target.value })}
-                    placeholder="e.g. Near Hanuman Temple / Behind City Plaza"
-                    className="w-full bg-brand-bg border border-brand-accent/10 focus:border-brand-accent rounded-xl py-2.5 pl-9 pr-3.5 text-xs font-semibold focus:outline-none transition-all placeholder:text-brand-text/30 text-brand-text"
+                    placeholder="e.g. Near Hanuman Temple"
+                    className="w-full bg-brand-bg border border-brand-accent/10 focus:border-brand-accent rounded-xl py-3 pl-9 pr-3 text-sm font-semibold focus:outline-none transition-all placeholder:text-brand-text/30 text-brand-text"
                   />
                 </div>
               </div>
 
-              {/* Date & Time Slot */}
-              <div className="grid grid-cols-2 gap-3.5">
-                {/* Date */}
+              {/* Date & Time */}
+              <div className="grid grid-cols-2 gap-3">
                 <div className="flex flex-col gap-1">
                   <label className="text-[10px] font-bold text-brand-text/70 uppercase tracking-wider flex items-center gap-1">
-                    <Calendar size={12} className="text-brand-accent" />
-                    <span>Preferred Date</span>
+                    <Calendar size={10} className="text-brand-accent" />
+                    <span>Date</span>
                   </label>
                   <input
                     type="date"
                     min={new Date().toISOString().split('T')[0]}
                     value={formData.date}
                     onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                    className="w-full bg-brand-bg border border-brand-accent/10 focus:border-brand-accent rounded-xl py-2.5 px-3 text-xs font-semibold focus:outline-none transition-all text-brand-text"
+                    className="w-full bg-brand-bg border border-brand-accent/10 focus:border-brand-accent rounded-xl py-3 px-3 text-sm font-semibold focus:outline-none transition-all text-brand-text"
                     required
                   />
                 </div>
 
-                {/* Time slot */}
                 <div className="flex flex-col gap-1">
                   <label className="text-[10px] font-bold text-brand-text/70 uppercase tracking-wider flex items-center gap-1">
-                    <Clock size={12} className="text-brand-accent" />
-                    <span>Preferred Time Slot</span>
+                    <Clock size={10} className="text-brand-accent" />
+                    <span>Time</span>
                   </label>
                   <select
                     value={formData.time}
                     onChange={(e) => setFormData({ ...formData, time: e.target.value })}
-                    className="w-full bg-brand-bg border border-brand-accent/10 focus:border-brand-accent rounded-xl py-2.5 px-3 text-xs font-semibold focus:outline-none transition-all text-brand-text"
+                    className="w-full bg-brand-bg border border-brand-accent/10 focus:border-brand-accent rounded-xl py-3 px-3 text-sm font-semibold focus:outline-none transition-all text-brand-text appearance-none"
                   >
                     <option value="Morning (9 AM - 12 PM)">Morning (9-12)</option>
                     <option value="Afternoon (12 PM - 3 PM)">Afternoon (12-3)</option>
@@ -279,15 +283,15 @@ export default function BookingForm({ isOpen, onClose, initialServiceId }) {
             </form>
           </div>
 
-          {/* Action buttons */}
-          <div className="px-5 py-4 border-t border-brand-accent/10 bg-brand-bg flex items-center justify-end">
+          {/* Sticky Submit Button */}
+          <div className="px-4 py-3 border-t border-brand-accent/10 bg-brand-bg shrink-0">
             <button
               type="button"
               onClick={handleSubmit}
-              className="bg-brand-accent hover:bg-brand-accent/95 text-white font-extrabold text-xs py-3 px-6 rounded-2xl transition-all shadow-md shadow-brand-accent/15 flex items-center gap-1.5"
+              className="w-full bg-brand-accent hover:bg-brand-accent/95 text-white font-extrabold text-sm py-3.5 rounded-2xl transition-all shadow-md shadow-brand-accent/15 flex items-center justify-center gap-2 active:scale-[0.98]"
             >
               <span>Book on WhatsApp</span>
-              <Send size={12} className="fill-white stroke-none" />
+              <Send size={14} className="fill-white stroke-none" />
             </button>
           </div>
         </motion.div>

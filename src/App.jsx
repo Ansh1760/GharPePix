@@ -56,14 +56,14 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-brand-bg text-brand-text font-sans">
+    <div className="min-h-screen min-h-[100dvh] bg-brand-bg text-brand-text font-sans w-full overflow-x-hidden">
       {/* 1. Desktop & Laptop Restriction Screen */}
-      <div className="hidden lg:flex fixed inset-0 z-50 w-full h-full bg-brand-bg items-center justify-center p-8 select-none">
+      <div className="hidden lg:flex fixed inset-0 z-50 w-full h-full bg-brand-bg items-center justify-center p-6 select-none overflow-hidden">
         {/* Soft abstract blurred circles */}
-        <div className="absolute w-96 h-96 rounded-full bg-brand-accent/10 top-12 left-12 blur-3xl" />
-        <div className="absolute w-96 h-96 rounded-full bg-brand-accent/10 bottom-12 right-12 blur-3xl" />
+        <div className="absolute w-80 h-80 rounded-full bg-brand-accent/10 top-12 left-12 blur-3xl" />
+        <div className="absolute w-80 h-80 rounded-full bg-brand-accent/10 bottom-12 right-12 blur-3xl" />
 
-        <div className="max-w-5xl w-full grid grid-cols-1 md:grid-cols-2 gap-12 items-center z-10">
+        <div className="max-w-5xl w-full grid grid-cols-2 gap-12 items-center z-10">
           {/* Left info box */}
           <div className="flex flex-col gap-6 text-left">
             <div className="flex items-center gap-2">
@@ -104,9 +104,9 @@ export default function App() {
             </span>
           </div>
 
-          {/* Right Phone Mockup displaying live app */}
+          {/* Right Phone Mockup */}
           <div className="flex justify-center">
-            <div className="relative mx-auto border-brand-text/90 bg-brand-text border-[14px] rounded-[3rem] h-[640px] w-[320px] shadow-soft-lg transition-transform duration-300 hover:scale-102">
+            <div className="relative mx-auto border-brand-text/90 bg-brand-text border-[14px] rounded-[3rem] h-[640px] w-[320px] shadow-soft-lg">
               {/* Speaker pill */}
               <div className="absolute top-3 left-1/2 -translate-x-1/2 w-28 h-4 bg-brand-text rounded-full z-20" />
               {/* Screen wrap */}
@@ -123,15 +123,15 @@ export default function App() {
       </div>
 
       {/* 2. Mobile & Tablet Layout */}
-      <div className="lg:hidden flex flex-col min-h-screen">
+      <div className="lg:hidden flex flex-col min-h-screen min-h-[100dvh] w-full overflow-x-hidden">
         {/* Top Navbar */}
         <Navbar 
           userLocation={profile ? profile.address : ''} 
           onEditLocation={() => setIsLocOpen(true)} 
         />
 
-        {/* Pages Viewport */}
-        <main className="flex-grow">
+        {/* Pages Viewport - pb-20 ensures content doesn't hide behind bottom nav */}
+        <main className="flex-1 w-full overflow-x-hidden">
           <Routes>
             <Route path="/" element={<Home onBookService={handleOpenBooking} />} />
             <Route path="/services" element={<Services onBookService={handleOpenBooking} />} />

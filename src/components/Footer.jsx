@@ -7,40 +7,40 @@ export default function Footer() {
   const navigate = useNavigate();
 
   return (
-    <footer className="w-full bg-brand-bgSecondary border-t border-brand-accent/10 px-6 pt-10 pb-28 md:px-12 md:pb-12 text-brand-text/80">
-      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-        {/* Brand Information */}
-        <div className="flex flex-col gap-3">
-          <div className="flex items-center gap-1.5">
-            <span className="text-2xl font-extrabold tracking-tight text-brand-accent">
+    <footer className="w-full bg-brand-bgSecondary border-t border-brand-accent/10 px-4 sm:px-6 pt-8 pb-28 text-brand-text/80">
+      <div className="w-full flex flex-col gap-6">
+        {/* Brand */}
+        <div className="flex flex-col gap-2.5">
+          <div className="flex items-center gap-1.5 flex-wrap">
+            <span className="text-xl sm:text-2xl font-extrabold tracking-tight text-brand-accent">
               GharPe<span className="text-brand-text">Fix</span>
             </span>
-            <div className="flex items-center gap-0.5 bg-brand-accent/10 px-1.5 py-0.5 rounded-full text-[10px] text-brand-accent font-semibold">
+            <div className="flex items-center gap-0.5 bg-brand-accent/10 px-1.5 py-0.5 rounded-full text-[9px] sm:text-[10px] text-brand-accent font-semibold">
               <ShieldCheck size={10} />
               <span>Verified Professionals</span>
             </div>
           </div>
-          <p className="text-sm text-brand-text/70">
+          <p className="text-xs sm:text-sm text-brand-text/70 leading-relaxed">
             {CONFIG.TAGLINE}. Your reliable partner for electrical, plumbing, appliance repair and water systems.
           </p>
-          <div className="flex flex-col gap-2 mt-2 text-xs font-medium text-brand-text/70">
+          <div className="flex flex-col gap-1.5 mt-1 text-[11px] sm:text-xs font-medium text-brand-text/70">
             <div className="flex items-center gap-2">
-              <Clock size={14} className="text-brand-accent" />
+              <Clock size={13} className="text-brand-accent shrink-0" />
               <span>{CONFIG.OPERATING_HOURS}</span>
             </div>
             <div className="flex items-center gap-2">
-              <Mail size={14} className="text-brand-accent" />
-              <span>{CONFIG.SUPPORT_EMAIL}</span>
+              <Mail size={13} className="text-brand-accent shrink-0" />
+              <span className="break-all">{CONFIG.SUPPORT_EMAIL}</span>
             </div>
           </div>
         </div>
 
-        {/* Categories / Services Quick Links */}
+        {/* Services Quick Links */}
         <div>
-          <h3 className="text-sm font-bold text-brand-text uppercase tracking-wider mb-4">
+          <h3 className="text-xs sm:text-sm font-bold text-brand-text uppercase tracking-wider mb-3">
             Services Offered
           </h3>
-          <ul className="grid grid-cols-2 gap-2 text-xs font-medium text-brand-text/60">
+          <ul className="grid grid-cols-2 gap-1.5 text-[10px] sm:text-xs font-medium text-brand-text/60">
             <li>• General Electrician</li>
             <li>• House Wiring</li>
             <li>• Fan Repair</li>
@@ -52,13 +52,13 @@ export default function Footer() {
           </ul>
         </div>
 
-        {/* Company Quick Links and Trust Badge */}
-        <div className="flex flex-col gap-4">
+        {/* Company Links */}
+        <div className="flex flex-col gap-3">
           <div>
-            <h3 className="text-sm font-bold text-brand-text uppercase tracking-wider mb-4">
+            <h3 className="text-xs sm:text-sm font-bold text-brand-text uppercase tracking-wider mb-2.5">
               Company
             </h3>
-            <div className="flex gap-4 text-xs font-semibold text-brand-accent">
+            <div className="flex flex-wrap gap-3 text-[11px] sm:text-xs font-semibold text-brand-accent">
               <button onClick={() => navigate('/')} className="hover:underline">Home</button>
               <button onClick={() => navigate('/services')} className="hover:underline">Services</button>
               <button onClick={() => navigate('/about')} className="hover:underline">About Us</button>
@@ -66,18 +66,19 @@ export default function Footer() {
             </div>
           </div>
 
-          <div className="bg-brand-bg/60 p-4 rounded-2xl border border-brand-accent/5 flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-brand-accent/10 text-brand-accent shrink-0">
-              <PhoneCall size={20} />
+          {/* Support Card */}
+          <div className="bg-brand-bg/60 p-3.5 sm:p-4 rounded-2xl border border-brand-accent/5 flex items-center gap-3">
+            <div className="p-2 sm:p-2.5 rounded-xl bg-brand-accent/10 text-brand-accent shrink-0">
+              <PhoneCall size={18} />
             </div>
-            <div>
-              <p className="text-xs font-bold text-brand-text">Need urgent assistance?</p>
-              <p className="text-[10px] text-brand-text/60 font-medium">Get in touch directly via WhatsApp</p>
+            <div className="min-w-0">
+              <p className="text-[11px] sm:text-xs font-bold text-brand-text">Need urgent assistance?</p>
+              <p className="text-[9px] sm:text-[10px] text-brand-text/60 font-medium">Get in touch directly via WhatsApp</p>
               <a 
                 href={`https://wa.me/${CONFIG.ADMIN_WHATSAPP_NUMBER}`} 
                 target="_blank" 
                 rel="noopener noreferrer" 
-                className="text-xs font-extrabold text-brand-accent hover:underline block mt-0.5"
+                className="text-[11px] sm:text-xs font-extrabold text-brand-accent hover:underline block mt-0.5"
               >
                 Chat with Support
               </a>
@@ -86,9 +87,10 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto border-t border-brand-text/5 mt-8 pt-4 flex flex-col sm:flex-row items-center justify-between text-xs text-brand-text/40 font-medium">
+      {/* Copyright */}
+      <div className="w-full border-t border-brand-text/5 mt-6 pt-4 flex flex-col items-center gap-1 text-[10px] sm:text-xs text-brand-text/40 font-medium text-center">
         <p>© {new Date().getFullYear()} GharPeFix. All rights reserved.</p>
-        <p className="mt-2 sm:mt-0">Built for Tier-2 & Tier-3 Indian Cities</p>
+        <p>Built for Tier-2 & Tier-3 Indian Cities</p>
       </div>
     </footer>
   );
